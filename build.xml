@@ -1,0 +1,77 @@
+<project name="Apresentacao" default="dist" basedir=".">
+  <description>
+    Apresentacao
+  </description>
+    <!-- definicao das pastas  -->
+  <property name="src" location="src"/>
+  <property name="test" location="test"/>
+  <property name="build" location="build"/>
+  <property name="build.test" location="build.test"/>
+  <property name="dist" location="dist"/>
+  <property name="libs" location="libs"/>
+
+  <target name="init" depends="clean">
+    <tstamp/>    
+    <mkdir dir="${build}"/>    
+  </target>
+  
+   <target name="init.test" depends="clean.test">
+    <tstamp/>        
+     <mkdir dir="${build.test}"/>
+  </target>
+  
+    <!-- compilacao do codigo fonte-->
+  <target name="compile" depends="init"     description="compile the source and test">
+      <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+  
+  <!-- Compilacao dos testes -->
+  <target name="compile.test" depends="init.test"     description="compile the source and test">
+   <javac srcdir="${test}" destdir="${build.test}" >
+    	<classpath  refid="classPath" />
+    </javac>
+  </target>
+
+    <!-- Criacao do arquivo jar do projeto-->
+  <target name="dist" depends="compile"     > 
+    <mkdir dir="${dist}/lib"/>   
+    <jar jarfile="${dist}/lib/Aprensetacao-${DSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+    <!-- Limpeza da pasta de codigo -->
+  <target name="clean"   description="clean up">
+    <delete dir="${build}"/>   
+  </target>
+  
+   <target name="clean.test"   description="clean up">
+
+    <delete dir="${build.test}"/>   
+  </target>
+ 
+  <!-- Localizacao das libs, codigos e testes -->
+  <path id="classPath">
+    <pathelement location="${libs}/junit.jar" />
+    <pathelement location="${build}" />
+    <pathelement location="${build.test}" />
+  </path>
+  
+  <!-- Aqui e chamado os testes -->
+ <target name="test" depends="compile.test">
+
+  <junit printsummary="yes" haltonfailure="yes">
+
+    <classpath path="${lib.dir}">
+            <path refid="classPath" />
+            
+        </classpath>
+
+<!-- Local onde esta suite de testes -->
+    <test name="apresentacao.AllTests"
+             haltonfailure="no" outfile="result">    
+       <formatter type="xml" />
+    </test>
+
+  </junit>
+</target>
+  
+</project>
